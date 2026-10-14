@@ -40,3 +40,7 @@ service-account*.json
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Downloaded models and local derivatives: redistribution not cleared for the full set
+pieces_3d/
+public/models/revenants/

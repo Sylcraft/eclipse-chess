@@ -61,3 +61,17 @@ Les détails de chaque archétype sont fusionnés en quatre géométries partag�
 `npm run build`, `npm run lint` et `npm test` ont été exécutés avec succès. Le bundle 3D séparé dépasse encore le seuil d’avertissement de Vite (500 ko avant compression). Aucun navigateur connecté ni navigateur intégré disponible dans cette session : contrôle visuel, clics 3D, gestes tactiles et mesure des performances GPU/mobile restent à effectuer sur appareil réel.
 
 La partie est en mémoire : recharger recommence la partie. Les nulles reconnues par chess.js terminent automatiquement la partie, comme dans la V1.1. Les polices Google Fonts conservent des polices système de secours. WebGL est nécessaire pour la scène 3D. Aucun déploiement Vercel n’a été effectué.
+
+## Modèles GLB personnalisés — essais locaux
+
+Le plateau utilise désormais les six GLB optimisés de `public/models/revenants/`, avec repli procédural indépendant si un fichier manque ou échoue. Les téléchargements et dérivés restent ignorés par Git : les droits de redistribution de la reine, du fou et du pion ne sont pas indiqués. Aucun asset n’a été commité ou publié.
+
+Voir [l’inventaire, les licences, les tailles et la procédure de préparation](docs/revenants-assets.md). Le lancement reste `npm run dev`. Le pion fourni est en pose en T. Attention : un build local copie ces assets dans `dist` ; ne pas le publier avant confirmation des droits.
+
+## V3.1 — Présentation des modèles
+
+Normalisation sur les sommets réels, personnages agrandis de 10 à 44 %, finition argent/obsidienne, socles affinés, éclairage rééquilibré et cadrage adapté aux écrans étroits. Aucun GLB source modifié. Voir [les mesures, le diagnostic et les limites de validation](docs/rendering-v31.md). Après lancement, recharger complètement la page pour renouveler les matériaux mis en cache.
+
+## État à la clôture du 15 octobre 2026
+
+**Le problème graphique reste ouvert.** Le dernier contrôle visuel de l’utilisateur juge les modèles toujours trop fins, difficiles à identifier et peu satisfaisants après V3.1. Les mesures et tests réussis ne valent pas validation artistique. Lire [PROJECT_STATUS.md](PROJECT_STATUS.md) pour reprendre : état réel, limites, licences, commandes et prochaine action unique.

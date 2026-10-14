@@ -7,7 +7,9 @@ import type { Square } from 'chess.js';
 import { useGame } from '../store/gameStore';
 import { MOVE_DURATION, motion, snapshot, squarePosition, type Transition, type VisualPiece } from '../chess/presentation';
 import { Piece } from './Piece';
+import { ImportedPiece } from './ImportedPiece';
 import { Sanctuary } from './Sanctuary';
+import { CAMERA_POSITION, CAMERA_TARGET, initialCameraPosition } from './modelConfig';
 const files='abcdefgh';
 const tileGeometry=new BoxGeometry(.985,.12,.985);
 const tileMaterials=Object.fromEntries(Object.entries({light:'#89969b',dark:'#293944',selected:'#2c7487',recent:'#465f6b',check:'#81394d'}).map(([key,color])=>[key,new MeshStandardMaterial({color,roughness:.79,metalness:.19})]));
@@ -51,27 +53,28 @@ function Army({pieces,transition}:{pieces:VisualPiece[];transition:Transition|nu
  });
  return <group>{pieces.map(p=>{
   const key=`${p.color}-${p.square}`;
-  return <group key={`${transition?.id??'rest'}-${key}`} ref={node=>{if(node)groups.current.set(key,node);else groups.current.delete(key);}} position={squarePosition(p.from)} onClick={p.captured?undefined:e=>{e.stopPropagation();if(e.delta<5)useGame.getState().click(p.square);}}>
-   <Piece type={p.promotedFrom??p.type} color={p.color}/>
+  return <group key={key} ref={node=>{if(node)groups.current.set(key,node);else groups.current.delete(key);}} position={squarePosition(p.from)} onClick={p.captured?undefined:e=>{e.stopPropagation();if(e.delta<5)useGame.getState().click(p.square);}}>
+   <Piece renderer={ImportedPiece} type={p.promotedFrom??p.type} color={p.color}/>
   </group>;
  })}</group>;
 }
 function Camera(){
  const controls=useRef<Controls>(null);
  const view=useGame(s=>s.view);
+ const aspect=useThree(s=>s.size.width/s.size.height);
  const camera=useThree(s=>s.camera),invalidate=useThree(s=>s.invalidate);
- useEffect(()=>{camera.position.set(9,12,12);controls.current?.target.set(0,0,0);controls.current?.update();invalidate();},[view,camera,invalidate]);
- return <OrbitControls ref={controls} makeDefault target={[0,0,0]} minDistance={11} maxDistance={25} minPolarAngle={.15} maxPolarAngle={Math.PI/3} enablePan={false}/>;
+ useEffect(()=>{camera.position.set(...initialCameraPosition(aspect));controls.current?.target.set(...CAMERA_TARGET);controls.current?.update();invalidate();},[view,camera,invalidate,aspect]);
+ return <OrbitControls ref={controls} makeDefault target={CAMERA_TARGET} minDistance={10.5} maxDistance={Math.max(25,Math.hypot(...initialCameraPosition(aspect))+2)} minPolarAngle={.15} maxPolarAngle={Math.PI/3} enablePan={false}/>;
 }
 function Scene(){
  const chess=useGame(s=>s.chess);useGame(s=>s.revision);
  const transition=useGame(s=>s.transition),quality=useGame(s=>s.quality);
  return <>
   <color attach="background" args={['#0b131e']}/><fog attach="fog" args={['#0b131e',23,52]}/>
-  <ambientLight intensity={.45}/><hemisphereLight args={['#b3d7f5','#121622',.85]}/>
-  <directionalLight position={[3,11,5]} intensity={3} castShadow={quality==='high'} shadow-mapSize={[2048,2048]} shadow-camera-left={-8} shadow-camera-right={8} shadow-camera-top={8} shadow-camera-bottom={-8} shadow-normalBias={.035}/>
-  <directionalLight position={[-6,6,-7]} color="#649edb" intensity={2}/>
-  <pointLight position={[-5,3,-4]} color="#3a9dff" intensity={25} distance={18}/>
+  <ambientLight intensity={.65}/><hemisphereLight args={['#c4e3ff','#263347',1.1]}/>
+  <directionalLight position={[3,10,6]} color="#e6efff" intensity={2.6} castShadow={quality==='high'} shadow-mapSize={[2048,2048]} shadow-camera-left={-8} shadow-camera-right={8} shadow-camera-top={8} shadow-camera-bottom={-8} shadow-normalBias={.015} shadow-bias={-.00015}/>
+  <directionalLight position={[-6,6,7]} color="#bddcff" intensity={1.35}/>
+  <directionalLight position={[2,6,-8]} color="#74aeed" intensity={1.5}/>
   <Sanctuary quality={quality}/><Tiles/><Army pieces={transition?.pieces??snapshot(chess)} transition={transition}/>
   {[...files].map((f,i)=><Html key={f} position={[i-3.5,.01,4.23]} center style={{pointerEvents:'none'}}><span className="coordinate">{f.toUpperCase()}</span></Html>)}
   {[1,2,3,4,5,6,7,8].map(n=><Html key={n} position={[-4.25,.01,4.5-n]} center style={{pointerEvents:'none'}}><span className="coordinate">{n}</span></Html>)}
@@ -80,5 +83,5 @@ function Scene(){
 }
 export function Board(){
  const quality=useGame(s=>s.quality);
- return <Canvas frameloop="demand" fallback={<div className="webgl-fallback">WebGL indisponible. Utilisez le plateau textuel ci-dessous.</div>} shadows={quality==='high'} camera={{position:[9,12,12],fov:40}} dpr={quality==='high'?[1,1.75]:1} gl={{antialias:true,powerPreference:'high-performance'}} onPointerMissed={()=>useGame.getState().cancel()}><Scene/></Canvas>;
+ return <Canvas frameloop="demand" fallback={<div className="webgl-fallback">WebGL indisponible. Utilisez le plateau textuel ci-dessous.</div>} shadows={quality==='high'} camera={{position:CAMERA_POSITION,fov:40}} dpr={quality==='high'?[1,1.75]:1} gl={{antialias:true,powerPreference:'high-performance'}} onPointerMissed={()=>useGame.getState().cancel()}><Scene/></Canvas>;
 }
