@@ -1,0 +1,42 @@
+﻿# Dependencies and generated build output
+node_modules/
+dist/
+dist-ssr/
+coverage/
+.vite/
+*.tsbuildinfo
+
+# Package manager caches and logs
+.npm-cache/
+.pnpm-store/
+.yarn/cache/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+!.env.sample
+*.local
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+credentials.json
+service-account*.json
+.aws/
+.vercel/
+
+# Editor and operating system files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+Desktop.ini
