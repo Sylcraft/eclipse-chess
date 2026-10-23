@@ -143,3 +143,14 @@ git status --short
 ```
 
 Le compte d’exécution Codex peut rencontrer une différence de propriétaire. Dans ce cas, utiliser l’option **limitée à la commande** `git -c safe.directory=D:/Projets/Informatique/Programmation/eclipse_chess ...` ; ne pas modifier la configuration globale sans nécessité.
+
+## Publication autorisée — 23 octobre 2026
+
+L’utilisateur autorise explicitement commits, push sur main et déploiement de la dernière version du code, avant le portfolio. Revue locale : main propre au commit ebbfeee, un commit d’avance sur origin/main (58a35f8). Aucun changement fonctionnel supplémentaire.
+
+Vérifications : npm run lint, npm test (49 tests, 7 fichiers, six GLB locaux présents) et npm run build réussis le 23 octobre. Le chunk 3D reste volumineux (environ 974 Ko avant compression). Les tests locaux ne valent pas validation visuelle WebGL/mobile.
+
+Publication uniquement depuis les fichiers suivis sur GitHub : les six GLB et pieces_3d restent sur le disque, exclus de Git et du build distant. Le repli procédural existant sert les pièces si les GLB sont absents. Ne pas envoyer le dist local, qui contient les modèles non autorisés. L’autorisation de déployer ne confirme pas les licences des modèles ; leur qualité artistique reste non résolue.
+
+Priorités : 1. Vérifier le déploiement public du code suivi. 2. Contrôler visuellement le jeu dans un navigateur réel. 3. Clarifier les licences avant toute publication des modèles.
+Prochaine action : pousser main puis vérifier le commit construit par Vercel et les ressources publiques, avant de publier le portfolio. Les résultats distants seront rapportés dans le bilan de mission.
